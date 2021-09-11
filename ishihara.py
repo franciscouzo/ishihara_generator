@@ -66,7 +66,7 @@ def circle_draw(draw_image, image, circle):
 
 
 def main():
-    image = Image.open(sys.argv[1])
+    image = Image.open(sys.argv[1]).convert('RGB')
     image2 = Image.new('RGB', image.size, BACKGROUND)
     draw_image = ImageDraw.Draw(image2)
 
