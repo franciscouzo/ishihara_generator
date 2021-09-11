@@ -37,7 +37,8 @@ def generate_circle(image_width, image_height, min_diameter, max_diameter):
     return x, y, radius
 
 
-def overlaps_motive(image, (x, y, r)):
+def overlaps_motive(image, circle):
+    x, y, r = circle
     points_x = [x, x, x, x-r, x+r, x-r*0.93, x-r*0.93, x+r*0.93, x+r*0.93]
     points_y = [y, y-r, y+r, y, y, y+r*0.93, y-r*0.93, y+r*0.93, y-r*0.93]
 
@@ -48,14 +49,17 @@ def overlaps_motive(image, (x, y, r)):
     return False
 
 
-def circle_intersection((x1, y1, r1), (x2, y2, r2)):
+def circle_intersection(circle1, circle2):
+    x1, y1, r1 = circle1
+    x2, y2, r2 = circle2
     return (x2 - x1)**2 + (y2 - y1)**2 < (r2 + r1)**2
 
 
-def circle_draw(draw_image, image, (x, y, r)):
-    fill_colors = COLORS_ON if overlaps_motive(image, (x, y, r)) else COLORS_OFF
+def circle_draw(draw_image, image, circle):
+    fill_colors = COLORS_ON if overlaps_motive(image, circle) else COLORS_OFF
     fill_color = random.choice(fill_colors)
 
+    x, y, r = circle
     draw_image.ellipse((x - r, y - r, x + r, y + r),
                        fill=fill_color,
                        outline=fill_color)
@@ -77,7 +81,7 @@ def main():
     circle_draw(draw_image, image, circle)
 
     try:
-        for i in xrange(TOTAL_CIRCLES):
+        for i in range(TOTAL_CIRCLES):
             tries = 0
             if IMPORTED_SCIPY:
                 kdtree = KDTree([(x, y) for (x, y, _) in circles])
@@ -95,7 +99,7 @@ def main():
                     tries += 1
                     circle = generate_circle(width, height, min_diameter, max_diameter)
 
-            print '{}/{} {}'.format(i, TOTAL_CIRCLES, tries)
+            print('{}/{} {}'.format(i, TOTAL_CIRCLES, tries))
 
             circles.append(circle)
             circle_draw(draw_image, image, circle)
