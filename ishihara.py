@@ -43,8 +43,11 @@ def overlaps_motive(image, circle):
     points_y = [y, y-r, y+r, y, y, y+r*0.93, y-r*0.93, y+r*0.93, y-r*0.93]
 
     for xy in zip(points_x, points_y):
-        if image.getpixel(xy)[:3] != BACKGROUND:
-            return True
+        try:
+            if image.getpixel(xy)[:3] != BACKGROUND:
+                return True
+        except IndexError:
+            return False
 
     return False
 
